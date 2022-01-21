@@ -7,6 +7,7 @@
      title="Basic Modal" 
      okText="Save"
      centered
+     @ok = "onSave"
      >
     <div>
     <a-checkbox
@@ -67,19 +68,22 @@ export default defineComponent({
         const {checked} = e.target
         if(checked){
           options.forEach((ele)=>{
-            checkAll.checkList.add(ele.label)
-           
-            const test = ele.children.map((item)=>item.value)
-            ele.checkList = test as unknown as never
+            checkAll.checkList.add(ele.label)          
+            const check = ele.children.map((item)=>item.value)
+            ele.checkList = check as unknown as never
             ele.checked = true
+            ele.indeterminate = false
             // console.log(ele)
             // console.log(test)
           })
         }else{
           options.forEach((ele)=>{
             checkAll.checkList.delete(ele.label)
+            checkAll.checked = false
+            checkAll.indeterminate = false
             ele.checkList = []
             ele.checked = false
+            ele.indeterminate = false
             })
         // console.log(checkAll)
         }
@@ -171,6 +175,24 @@ export default defineComponent({
    
   }
 
+ const onSave = ()=>{
+  //  console.log(checkAll)
+  //  console.log(options)
+  //  const onlyChild = options.reduce((acc,item)=>{
+  //   // acc.push({[item.label]:item.children.map((ele)=>ele.value)} as unknown as never)
+  //   if(acc[item.label]){
+  //     acc[item.label] = acc[item.label]
+  //   }else{
+  //     acc[item.label] = item.children.map((ele)=>ele.value)
+  //   }
+
+  //   return acc
+  //  },{} as unknown as any)
+  //  console.log(onlyChild)
+  const onlyChild = options.map((ele)=>ele.children.map((item)=>item.value))
+  console.log(onlyChild)
+  // const test = onlyChild.map(())
+ }
 
     return {
       isOpen,
@@ -179,7 +201,8 @@ export default defineComponent({
       ...toRefs(checkAll),
       options,
       onCheckAllEachContent,
-      onCheckDetail
+      onCheckDetail,
+      onSave
     }
   },
 })
